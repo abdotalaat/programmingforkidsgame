@@ -14,7 +14,7 @@ import android.app.Activity;
 
 public abstract class BaseScene extends Scene 
 {
-
+//new
 	protected Engine engine;
 	protected Activity activity;
 	protected ResourcesManager resourcesManager;
