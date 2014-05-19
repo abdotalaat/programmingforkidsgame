@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.example.base.BaseScene;
+import com.example.customsimpleactivities.BuyHintsLayout;
 import com.example.customsimpleactivities.MainLevelsSimpleLayout;
 import com.example.scene.CompetitionScene;
 
@@ -157,16 +158,7 @@ public class SceneManager
 	
 	public void createSubMenuScene()
 	{
-		/*
-		ResourcesManager.getInstance().loadSubMenuResources();
-		levelMenuScene = new LevelsMenuScene();
-		loadingScene = new LoadingScene();
-		SceneManager.getInstance().setScene(levelMenuScene);
-		ResourcesManager.getInstance().unloadMenuTextures();
-		*/
 		
-		
-		//SublevelSimpleLayout subLayout = new SublevelSimpleLayout();
 		ResourcesManager.getInstance().loadSubMenuResources();
 		
 		Intent i = new Intent(ResourcesManager.getInstance().activity, MainLevelsSimpleLayout.class);
@@ -175,6 +167,11 @@ public class SceneManager
 		//ResourcesManager.getInstance().unloadMenuTextures();
 	}
 	
+	public void createHintsScene()
+	{
+		Intent i = new Intent(ResourcesManager.getInstance().activity, BuyHintsLayout.class);
+		ResourcesManager.getInstance().activity.startActivity(i);
+	}
 	public void createCompetitionScene()
 	{
 		ResourcesManager.getInstance().loadSubMenuResources();

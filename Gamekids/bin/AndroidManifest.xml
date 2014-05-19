@@ -40,6 +40,7 @@
             android:name="com.example.gamekids.AppLogingActivity"
             android:label="@string/title_activity_app_loging" >
         </activity>
+        
         <activity
             android:name="com.example.gamekids.HomeHActivity"
             android:label="@string/title_activity_home_h" >
@@ -61,6 +62,13 @@
         <activity
             android:name="com.example.customsimpleactivities.SublevelSimpleLayout"
             android:label="@string/title_activity_sublevel_simple_layout"
+            android:configChanges="orientation|screenSize" >
+        </activity>
+        
+        
+         <activity
+            android:name="com.example.customsimpleactivities.BuyHintLayout"
+            
             android:configChanges="orientation|screenSize" >
         </activity>
     </application>

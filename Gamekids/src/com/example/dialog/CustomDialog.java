@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.gamekids.R;
 import com.example.manager.ResourcesManager;
+import com.example.manager.SceneManager;
 
 public class CustomDialog {
 
@@ -53,6 +54,7 @@ public class CustomDialog {
 						case 1:     //hints
 							//openHintsScene
 							//callFunctionofHints
+							//SceneManager.getInstance().createHintsScene();
 							break;
 
 						default:
