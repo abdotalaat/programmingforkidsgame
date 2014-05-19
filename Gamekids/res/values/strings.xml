@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GameTutorial</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_app_loging">AppLogingActivity</string>
+    <string name="title_activity_home_h">HomeHActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="app_id">1398863640395012</string>
+    <string name="title_facebook_login">login</string>
+    <string name="title_activity_sublevel_simple_layout">SublevelSimpleLayout</string>
+
+</resources>
