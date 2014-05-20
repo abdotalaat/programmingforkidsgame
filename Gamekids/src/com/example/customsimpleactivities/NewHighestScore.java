@@ -29,6 +29,7 @@ public class NewHighestScore
 				
 				dialog = new Dialog(ResourcesManager.getInstance().activity);
 				dialog.setContentView(R.layout.new_score_layout);
+				dialog.setTitle("Buy Hints");
 				TextView txt= (TextView)dialog.findViewById(R.id.scoreTxt);
 				txt.setText(text);
 				Button okBtn=(Button)dialog.findViewById(R.id.okBtnId);

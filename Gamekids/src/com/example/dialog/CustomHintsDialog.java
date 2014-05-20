@@ -57,6 +57,8 @@ public class CustomHintsDialog implements OnClickListener
 			if(MazeScene.highestScore >= 100)
 			{	 new NewHighestScore().showDialog("You got a new hint, your score= "+String.valueOf(MazeScene.highestScore-100)) ;
 					MazeScene.highestScore-=100;
+					MazeScene.availableHints++;
+					MazeScene.hintsCount=MazeScene.availableHints-1;
 			}
 				
 			else 
@@ -69,6 +71,8 @@ public class CustomHintsDialog implements OnClickListener
 					{
 						 new NewHighestScore().showDialog("You got two new hint, your score= "+String.valueOf(MazeScene.highestScore-200)) ;
 						 MazeScene.highestScore-=200;
+						 MazeScene.availableHints+=2;
+						 MazeScene.hintsCount=MazeScene.availableHints-2;
 					}
 			else 
 				new NewHighestScore().showDialog("Ops!you haven't enough score ");
@@ -81,6 +85,8 @@ public class CustomHintsDialog implements OnClickListener
 			{
 				 new NewHighestScore().showDialog("You got three new hint, your score= "+String.valueOf(MazeScene.highestScore-300)) ;
 				 MazeScene.highestScore-=300;
+				 MazeScene.availableHints+=3;
+				 MazeScene.hintsCount=MazeScene.availableHints-3;
 			}
 	else 
 		new NewHighestScore().showDialog("Ops!you haven't enough score ");

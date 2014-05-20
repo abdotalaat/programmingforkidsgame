@@ -110,8 +110,8 @@ public  class Player extends AnimatedSprite
 //					}
 //				});
 				
-				charArrIndex = 0;
-				pathWayArr.clear();
+//				charArrIndex = 0;
+//				pathWayArr.clear();
 				System.out.println("lassttt");
 			}
 		

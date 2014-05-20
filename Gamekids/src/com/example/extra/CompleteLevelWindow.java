@@ -79,7 +79,7 @@ public class CompleteLevelWindow extends Sprite
 		
 		
 		// Hide HUD
-		camera.getHUD().setVisible(false);
+		//camera.getHUD().setVisible(false);
 		
 		// Disable camera chase entity
 		camera.setChaseEntity(null);

@@ -33,6 +33,7 @@ import org.xml.sax.Attributes;
 import android.R.integer;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.widget.ImageView;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -56,6 +57,7 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 	private PhysicsWorld physicsWorld;
 	private int timer = 120;
 	public static int highestScore=0;
+	public static int numOfTrialOfLevel2=1;
 	
 	int countOfSteps=0;
 	 TimerHandler timerHandler;
@@ -92,8 +94,9 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 	private static final int RESET = -1;
 	private static final int HINTS=5;
 	private static final int SCENE=6;
-		
-	private static int hintsCount=0;
+	private int currIndex=0;
+	public static int hintsCount=0;
+	public static int availableHints=3;
 	private CompleteLevelWindow levelCompleteWindow;
 	
 	Sprite levelObject;
@@ -109,7 +112,16 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 	
 	public static Sprite coin;
 	
-	
+	private void checkNumOfTrial()
+	{
+		System.out.println(numOfTrialOfLevel2+ " " +SceneManager.getLevelID());
+		if(SceneManager.getLevelID() == 2 && numOfTrialOfLevel2 == 1)
+		{
+			hintsCount=0;
+			availableHints=3;
+			numOfTrialOfLevel2++;
+		}
+	}
 	
 	@Override
 	public void createScene() 
@@ -119,8 +131,8 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 	    createHUD();
 	    createPhysics();
 	    createGameOverText();
-	    //loadSol(  );
-	    loadLevel( SceneManager.getLevelID() );
+	    loadLevel( SceneManager.getLevelID());
+	    checkNumOfTrial();
 	    timerCounting();
 	    
 	    //ResourcesManager.getInstance().activity.runOnUpdateThread(pRunnable);
@@ -251,8 +263,8 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 								this.setVisible(false);
 								this.setIgnoreUpdate(true);
 								int t=timer;
-								//engine.clearUpdateHandlers();
-								//player.resetPlayer();
+								engine.unregisterUpdateHandler(timerHandler);
+								player.resetPlayer();
 								timeText.setText("Time: " + timer);
 								hintsBtn.setEnabled(false);
 								reset.setEnabled(false);
@@ -401,6 +413,7 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 			
 				for (int i = 0; i < Player.pathWayArr.size() ; i++) 
 				{
+					currIndex=i;
 					System.out.println("--> "+Player.pathWayArr.get(i));
 					if(i>= level_one_sol.size())
 					{
@@ -441,9 +454,21 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 		}
 		else if(pButtonSprite.getTag() == HINTS)
 		{
+			System.out.println("sizeeeeeee="+player.pathWayArr.size()+"WRONGG="+wrongStep+"curr="+currIndex+level_one_sol.size());
 			if(Player.pathWayArr.size() > 0 && wrongStep >-1)
 				showHint();
-		}
+			else if(Player.pathWayArr.size() == 0) 
+			{System.out.println("case2");
+				CustomDialog.showDialog("Here's a tip","Drag block then run to move your hero:)" ,"Ok",2);
+			}
+			else if (Player.pathWayArr.size() > 0 && wrongStep == -1)
+			{
+				System.out.println("case3");
+				CustomDialog.showDialog("Here's a tip","you need to do "+checkSol(level_one_sol.get(currIndex+1))+" turn" ,"Ok",2);
+			}
+			
+			else System.out.println("case4");
+			}
 	}
 
 	public static void removeCoin()
@@ -459,18 +484,12 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 	        public void run() {
 	         String w="";
 	         String msg="";
-	         if(hintsCount <=3){
+	         System.out.println("count== "+hintsCount+ "available=="+availableHints);
+	         if(hintsCount <= availableHints){
 	          if(wrongStep < level_one_sol.size() )
 	          {
-	        	if(level_one_sol.get(wrongStep).equals('u'))
-	        		w="Up";
-	        	else if(level_one_sol.get(wrongStep).equals('d'))
-	        		w="Down";
-	        		else if(level_one_sol.get(wrongStep).equals('r'))
-		        		w="Right";
-	        		else if(level_one_sol.get(wrongStep).equals('l'))
-	        		w="Left";
-	        	 msg="You need to do "+ w +" turn";
+	        	
+	        	 msg="You need to do "+ checkSol(level_one_sol.get(wrongStep))+" turn";
 	          
 	          }
 	         }
@@ -526,7 +545,9 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
             {
                     displayGameOverText();
                     engine.unregisterUpdateHandler(pTimerHandler);
-            		//player.resetPlayer();
+                    player.resetPlayer();
+                    reset.setEnabled(false);
+                    submit.setEnabled(false);
             }
             else	
             decreaseTime(1);
@@ -540,8 +561,22 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 		// TODO Auto-generated method stub
 //		levelCompleteWindow.detachSelf();
 //		levelCompleteWindow.dispose();
-		player.resetPlayer();
+		this.detachChild(levelCompleteWindow);
+		
 		return false;
+	}
+	private static String checkSol(Character x)
+	{
+		String w="";
+		if(x.equals('u'))
+    		w="Up";
+    	else if(x.equals('d'))
+    		w="Down";
+    		else if(x.equals('r'))
+        		w="Right";
+    		else if(x.equals('l'))
+    		w="Left";
+		return w;
 	}
 
 }

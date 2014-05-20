@@ -13,6 +13,7 @@ import com.example.manager.SceneManager;
 
 public class CustomDialog {
 
+	
 	public static void showDialog(final String title,final String msg,final String okBtnMsg,final int senderID)
 	{
 		ResourcesManager.getInstance().activity.runOnUiThread(new Runnable() 
@@ -21,11 +22,13 @@ public class CustomDialog {
 			public void run() 
 			{
 				
+					
+				
 				final Dialog dialog = new Dialog(ResourcesManager.getInstance().activity);
 				dialog.setContentView(R.layout.competiondialog);
 				dialog.setTitle(title);
 				
-	 
+		
 				// set the custom dialog components - text, image and button
 				TextView text = (TextView) dialog.findViewById(R.id.text);
 				text.setText(msg);
@@ -56,7 +59,8 @@ public class CustomDialog {
 							 new CustomHintsDialog().showDialog();
 							 dialog.dismiss();
 							break;
-
+						case 2:
+							dialog.dismiss();
 						default:
 							break;
 						}

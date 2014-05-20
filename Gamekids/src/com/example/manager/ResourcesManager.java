@@ -44,6 +44,7 @@ public class ResourcesManager
 	public ITextureRegion splash_region;
 	public ITextureRegion menu_background_region;
 	public ITextureRegion menu_background_facebook;
+	public ITextureRegion background_login;
 	public ITextureRegion play_region;
 	public ITextureRegion options_region;
 	public ITextureRegion quit_region;
@@ -125,6 +126,11 @@ public class ResourcesManager
 
 	}
 
+	private void loadGameRegisterGraphics()
+	{
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
+	
+	}
 	
 	private void loadFacebookGraphics()
 	{
