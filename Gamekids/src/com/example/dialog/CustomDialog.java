@@ -31,11 +31,12 @@ public class CustomDialog {
 				text.setText(msg);
 				ImageView image = (ImageView) dialog.findViewById(R.id.image);
 				image.setImageResource(R.drawable.ic_launcher);
-	 
+				
 				Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonCancel);
 				Button getHintsButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
 				//if button is clicked, close the custom dialog
 				getHintsButton.setText(okBtnMsg);
+				
 				dialogButton.setOnClickListener(new OnClickListener() 
 				{
 					@Override
@@ -52,9 +53,8 @@ public class CustomDialog {
 					{
 						switch (senderID) {
 						case 1:     //hints
-							//openHintsScene
-							//callFunctionofHints
-							//SceneManager.getInstance().createHintsScene();
+							 new CustomHintsDialog().showDialog();
+							 dialog.dismiss();
 							break;
 
 						default:

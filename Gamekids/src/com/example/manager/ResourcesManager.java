@@ -336,6 +336,16 @@ public class ResourcesManager
 	public void unloadGameTextures()
 	{
 	    // TODO (Since we did not create any textures for game scene yet)
+	
+	
+		gameTextureAtlas.unload();
+		block1_region=null;
+		coin_region=null;
+		arrow_btn=null;
+		submit_btn=null;
+		reset_btn=null;
+		hint_btn=null;
+		
 	}
 	
 	

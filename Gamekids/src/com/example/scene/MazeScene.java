@@ -9,6 +9,8 @@ import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.LoopEntityModifier;
 import org.andengine.entity.modifier.ScaleModifier;
+import org.andengine.entity.scene.IOnSceneTouchListener;
+import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.ButtonSprite.OnClickListener;
@@ -18,6 +20,7 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
+import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.SAXUtils;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
@@ -43,7 +46,7 @@ import com.example.manager.SceneManager;
 import com.example.manager.SceneManager.SceneType;
 import com.example.object.Player;
 
-public class MazeScene extends BaseScene implements OnClickListener
+public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTouchListener
 {
 
 	
@@ -55,7 +58,7 @@ public class MazeScene extends BaseScene implements OnClickListener
 	public static int highestScore=0;
 	
 	int countOfSteps=0;
-	
+	 TimerHandler timerHandler;
 	ButtonSprite submit,reset, hintsBtn ;
 	private static final String TAG_ENTITY = "entity";
 	private static final String TAG_ENTITY_ATTRIBUTE_X = "x";
@@ -88,10 +91,12 @@ public class MazeScene extends BaseScene implements OnClickListener
 	private static final int SUBMIT = 0;
 	private static final int RESET = -1;
 	private static final int HINTS=5;
+	private static final int SCENE=6;
 		
 	private static int hintsCount=0;
 	private CompleteLevelWindow levelCompleteWindow;
 	
+	Sprite levelObject;
 	private Text gameOverText;
 	private boolean gameOverDisplayed = false;
 	
@@ -109,6 +114,7 @@ public class MazeScene extends BaseScene implements OnClickListener
 	@Override
 	public void createScene() 
 	{
+
 		createBackground();
 	    createHUD();
 	    createPhysics();
@@ -138,8 +144,9 @@ public class MazeScene extends BaseScene implements OnClickListener
 	{
 		// TODO Auto-generated method stub
 		 camera.setHUD(null);
-		    camera.setCenter(400, 240);
-
+		 camera.setCenter(400, 240);
+	//	 levelObject.detachSelf();
+	//	 levelObject.clearEntityModifiers();
 		
 	}
 	
@@ -169,7 +176,7 @@ public class MazeScene extends BaseScene implements OnClickListener
 
 	    timeText=new Text(300,430,resourcesManager.font,"Time: 123456789",new TextOptions(HorizontalAlign.RIGHT),vbom);
 	    timeText.setAnchorCenter(0, 0);
-	    timeText.setText("Time: 1000");
+	    timeText.setText("Time: 120");
 	    gameHUD.attachChild(timeText);
 	    
 	    hintsBtn = new ButtonSprite(600, 430, ResourcesManager.getInstance().hint_btn, vbom , MazeScene.this);
@@ -220,7 +227,7 @@ public class MazeScene extends BaseScene implements OnClickListener
 				final int y = SAXUtils.getIntAttributeOrThrow(pAttributes, TAG_ENTITY_ATTRIBUTE_Y);
 				final String type = SAXUtils.getAttributeOrThrow(pAttributes, TAG_ENTITY_ATTRIBUTE_TYPE);
 				
-				final Sprite levelObject;
+				
 				
 				if (type.equals(TAG_ENTITY_ATTRIBUTE_TYPE_VALUE_PLATFORM1))
 				{
@@ -244,9 +251,16 @@ public class MazeScene extends BaseScene implements OnClickListener
 								this.setVisible(false);
 								this.setIgnoreUpdate(true);
 								int t=timer;
+								//engine.clearUpdateHandlers();
+								//player.resetPlayer();
+								timeText.setText("Time: " + timer);
+								hintsBtn.setEnabled(false);
+								reset.setEnabled(false);
+								submit.setEnabled(false);
 								
 								if(t >= 80)
 								{
+									
 									levelCompleteWindow = new CompleteLevelWindow(vbom,"300",String.valueOf(highestScore+=300));
 									levelCompleteWindow.display(StarsCount.THREE, MazeScene.this, camera);
 								}
@@ -260,7 +274,8 @@ public class MazeScene extends BaseScene implements OnClickListener
 									levelCompleteWindow = new CompleteLevelWindow(vbom,"100",String.valueOf(highestScore+=100));
 									levelCompleteWindow.display(StarsCount.ONE, MazeScene.this, camera);
 								}
-									
+								MazeScene.this.setOnSceneTouchListener(MazeScene.this);	
+								
 							}
 						}
 					};
@@ -376,6 +391,7 @@ public class MazeScene extends BaseScene implements OnClickListener
 			
 			//moveChar('l');
 		}
+		
 		else if(pButtonSprite.getTag() == SUBMIT)
 		{
 			submit.setVisible(false);
@@ -493,6 +509,7 @@ public class MazeScene extends BaseScene implements OnClickListener
 	    gameOverText.setPosition(camera.getCenterX(), camera.getCenterY());
 	    attachChild(gameOverText);
 	    gameOverDisplayed = true;
+	    
 	}
 	
 	 
@@ -502,17 +519,29 @@ public class MazeScene extends BaseScene implements OnClickListener
     {                                    
         public void onTimePassed(final TimerHandler pTimerHandler)
         {
+        	
             pTimerHandler.reset();
-            
+            timerHandler=pTimerHandler;
             if(timer == 0 && !gameOverDisplayed)
             {
                     displayGameOverText();
                     engine.unregisterUpdateHandler(pTimerHandler);
+            		//player.resetPlayer();
             }
             else	
             decreaseTime(1);
         }
     }));
+	}
+
+	
+	@Override
+	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
+		// TODO Auto-generated method stub
+//		levelCompleteWindow.detachSelf();
+//		levelCompleteWindow.dispose();
+		player.resetPlayer();
+		return false;
 	}
 
 }

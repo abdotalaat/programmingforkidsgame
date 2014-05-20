@@ -172,7 +172,7 @@ public  class Player extends AnimatedSprite
 			if(MazeScene.wrongStep < MazeScene.level_one_sol.size() && !MazeScene.solved)
 			{
 				ResourcesManager.getInstance().music.play();
-				MazeScene.showHint();
+				//MazeScene.showHint();
 			}
 			
 	}
