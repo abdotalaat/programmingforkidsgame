@@ -14,6 +14,7 @@ import android.content.Intent;
 import com.example.base.BaseScene;
 
 import com.example.customsimpleactivities.MainLevelsSimpleLayout;
+import com.example.customsimpleactivities.RegistrationFormLayout;
 import com.example.scene.CompetitionScene;
 
 import com.example.scene.LoadingScene;
@@ -167,7 +168,13 @@ public class SceneManager
 		//ResourcesManager.getInstance().unloadMenuTextures();
 	}
 	
-	
+	public void createRegistrationScene()
+	{
+		//ResourcesManager.getInstance().loadRegistrationResources();
+		
+		Intent i = new Intent(ResourcesManager.getInstance().activity, RegistrationFormLayout.class);
+		ResourcesManager.getInstance().activity.startActivity(i);
+	}
 	public void createCompetitionScene()
 	{
 		ResourcesManager.getInstance().loadSubMenuResources();
@@ -220,8 +227,8 @@ public class SceneManager
 	
 	public void loadGameSceneA()
 	{
-		loadingScene = new LoadingScene();
-	    setScene(loadingScene);
+		//loadingScene = new LoadingScene();
+	    //setScene(loadingScene);
 	    
 	    
 	    

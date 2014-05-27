@@ -30,10 +30,8 @@ import org.andengine.util.level.simple.SimpleLevelEntityLoaderData;
 import org.andengine.util.level.simple.SimpleLevelLoader;
 import org.xml.sax.Attributes;
 
-import android.R.integer;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.widget.ImageView;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -47,6 +45,8 @@ import com.example.manager.SceneManager;
 import com.example.manager.SceneManager.SceneType;
 import com.example.object.Player;
 
+import databasepkg.SQLHelper;
+
 public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTouchListener
 {
 
@@ -57,6 +57,9 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 	private PhysicsWorld physicsWorld;
 	private int timer = 120;
 	public static int highestScore=0;
+	private int score=0;
+	private int defaultScore=0;
+	public static int numOfTrialOfLevel1=1;
 	public static int numOfTrialOfLevel2=1;
 	
 	int countOfSteps=0;
@@ -107,6 +110,7 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 	private Player player;
 	public static boolean solved=false;
 	public static int wrongStep=-1;
+	private String trial="";
 	String rightStep;
 	public static  ArrayList<Character> level_one_sol;
 	
@@ -121,6 +125,7 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 			availableHints=3;
 			numOfTrialOfLevel2++;
 		}
+		
 	}
 	
 	@Override
@@ -142,6 +147,9 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 	@Override
 	public void onBackKeyPressed() 
 	{
+		player.resetPlayer();
+		//player.detachSelf();
+		//player.dispose();
 		SceneManager.getInstance().loadSubMenuScene(engine);	
 	}
 
@@ -162,6 +170,7 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 		
 	}
 	
+	
 	private void loadSol(int levelNum)
 	{
 		level_one_sol =new ArrayList<Character>();
@@ -180,18 +189,18 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 	{
 	    gameHUD = new HUD();
 	    
-	    levelText = new Text(20, 430, resourcesManager.font, "Score: 123456789", new TextOptions(HorizontalAlign.LEFT), vbom);
+	    levelText = new Text(20, 400, resourcesManager.font, "Score: 123456789", new TextOptions(HorizontalAlign.LEFT), vbom);
 	    levelText.setAnchorCenter(0, 0);    
-	    levelText.setText("Level: 1");
+	    levelText.setText("Level: "+ SceneManager.getLevelID());
 	    gameHUD.attachChild(levelText);
 	    
 
-	    timeText=new Text(300,430,resourcesManager.font,"Time: 123456789",new TextOptions(HorizontalAlign.RIGHT),vbom);
+	    timeText=new Text(300,400,resourcesManager.font,"Time: 123456789",new TextOptions(HorizontalAlign.RIGHT),vbom);
 	    timeText.setAnchorCenter(0, 0);
 	    timeText.setText("Time: 120");
 	    gameHUD.attachChild(timeText);
 	    
-	    hintsBtn = new ButtonSprite(600, 430, ResourcesManager.getInstance().hint_btn, vbom , MazeScene.this);
+	    hintsBtn = new ButtonSprite(600, 400, ResourcesManager.getInstance().hint_btn, vbom , MazeScene.this);
 	    hintsBtn.setTag(HINTS);
 	    MazeScene.this.registerTouchArea(hintsBtn);
 	    gameHUD.attachChild(hintsBtn);
@@ -225,7 +234,7 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 					level_one_sol.add( s.charAt(i) );
 				
 				camera.setBounds(0, 0, width, height); // here we set camera bounds
-		        camera.setBoundsEnabled(true);
+		       camera.setBoundsEnabled(true);
 				return MazeScene.this;
 			}
 		});
@@ -259,33 +268,65 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
 							if ( player.collidesWith(this))
 							{
 								
-								
 								this.setVisible(false);
 								this.setIgnoreUpdate(true);
 								int t=timer;
 								engine.unregisterUpdateHandler(timerHandler);
-								player.resetPlayer();
+								//player.resetPlayer();
 								timeText.setText("Time: " + timer);
 								hintsBtn.setEnabled(false);
 								reset.setEnabled(false);
 								submit.setEnabled(false);
 								
-								if(t >= 80)
+								SharedPreferences highestScorePref=resourcesManager.activity.getPreferences(Context.MODE_PRIVATE);
+								highestScore=highestScorePref.getInt("HScore", 0);
+								SharedPreferences.Editor editor=highestScorePref.edit();
+								String oldScore=new SQLHelper(resourcesManager.getInstance().activity).getScore(1,SceneManager.getLevelID());
+								if(oldScore.trim().equals("empty"))
 								{
 									
+									System.out.println("SAVEEE"+oldScore);
+									trial="first";
+								}
+								else 
+								{
+									System.out.println("Have value");
+									System.out.println("oldSCORE= "+oldScore);
+									highestScore-=Integer.parseInt(oldScore);
+									trial="notfirst";
+								}
+								if(t >= 80)
+								{
+									score=300;
 									levelCompleteWindow = new CompleteLevelWindow(vbom,"300",String.valueOf(highestScore+=300));
 									levelCompleteWindow.display(StarsCount.THREE, MazeScene.this, camera);
+									
+
 								}
 								else if(t >=40)
 								{
+									score=200;
 									levelCompleteWindow = new CompleteLevelWindow(vbom,"200",String.valueOf(highestScore+=200));
 									levelCompleteWindow.display(StarsCount.TWO, MazeScene.this, camera);
 								}
 								else
 								{
+									score=100;
 									levelCompleteWindow = new CompleteLevelWindow(vbom,"100",String.valueOf(highestScore+=100));
 									levelCompleteWindow.display(StarsCount.ONE, MazeScene.this, camera);
 								}
+								if(trial.trim().equals("notfirst"))
+								{
+									System.out.println("update newSCORE= "+score);
+									new SQLHelper(resourcesManager.getInstance().activity).updateScore(1,SceneManager.getLevelID(), String.valueOf(score));
+								}
+								else if(trial.trim().equals("first"))
+								{
+									new SQLHelper(resourcesManager.getInstance().activity).saveScore(1,SceneManager.getLevelID(), String.valueOf(score));
+								}
+								
+								editor.putInt("HScore",highestScore);
+								editor.commit();
 								MazeScene.this.setOnSceneTouchListener(MazeScene.this);	
 								
 							}
@@ -545,7 +586,7 @@ public class MazeScene extends BaseScene implements OnClickListener, IOnSceneTou
             {
                     displayGameOverText();
                     engine.unregisterUpdateHandler(pTimerHandler);
-                    player.resetPlayer();
+                   // player.resetPlayer();
                     reset.setEnabled(false);
                     submit.setEnabled(false);
             }

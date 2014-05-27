@@ -14,7 +14,11 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.util.GLState;
 import org.andengine.util.debug.Debug;
 
+import android.content.Intent;
+
 import com.example.base.BaseScene;
+import com.example.customsimpleactivities.RegistrationFormLayout;
+import com.example.customsimpleactivities.SublevelSimpleLayout;
 import com.example.manager.ResourcesManager;
 import com.example.manager.SceneManager;
 import com.example.manager.SceneManager.SceneType;
@@ -26,7 +30,7 @@ public class RegisterScene extends BaseScene  implements OnClickListener
 
 	private final float WIDTH  = 400;
 	private final float HEIGHT = 240;
-	
+	ButtonSprite facebookBtn,registerBtn;
 
 	
 	@Override
@@ -70,16 +74,34 @@ public class RegisterScene extends BaseScene  implements OnClickListener
 	
 	public void loadBtn()
 	{
-		ButtonSprite facebookBtn = new ButtonSprite(WIDTH , HEIGHT, resourcesManager.faceNormalTextureRegion ,resourcesManager.facePressedTextureRegion , vbom , RegisterScene.this);
+		facebookBtn = new ButtonSprite(WIDTH , HEIGHT, resourcesManager.faceNormalTextureRegion ,resourcesManager.facePressedTextureRegion , vbom , RegisterScene.this);
 		attachChild(facebookBtn);
 		registerTouchArea(facebookBtn);
+		facebookBtn.setTag(1);
+		
+		registerBtn = new ButtonSprite(WIDTH , HEIGHT-100,resourcesManager.registerNormalTextureRegion,resourcesManager.registerNormalTextureRegion  ,vbom,RegisterScene.this);
+		attachChild(registerBtn);
+		registerTouchArea(registerBtn);
+		registerBtn.setTag(2);
 	}
 
 	@Override
 	public void onClick(ButtonSprite pButtonSprite, float pTouchAreaLocalX,float pTouchAreaLocalY) 
 	{
-		//loginFacebook();
-		SceneManager.getInstance().createMenuSceneFromFacebook();
+		
+		if(pButtonSprite.getTag()== 1)//fb
+		{
+			//go to fb
+			//loginFacebook();
+			SceneManager.getInstance().createMenuSceneFromFacebook();
+		}
+		else if(pButtonSprite.getTag() == 2) // Game reg.
+		{
+			//open registration form
+			System.out.println("REGISTRATIOOOOOON");
+			SceneManager.getInstance().createRegistrationScene();
+		}
+		
 	}
 	
 	

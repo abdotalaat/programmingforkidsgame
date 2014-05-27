@@ -78,6 +78,8 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 //				SceneManager.getInstance().loadGameScene(engine);
 				return true;
 			case MENU_OPTIONS:
+//				SceneManager.setLevelID(1);
+//				SceneManager.getInstance().loadGameSceneA();
 				SceneManager.getInstance().createSubMenuScene();
 				return true;
 				

@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.customsimpleactivities.NewHighestScore;
 import com.example.gamekids.R;
 import com.example.manager.ResourcesManager;
 import com.example.manager.SceneManager;

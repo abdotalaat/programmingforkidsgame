@@ -63,42 +63,7 @@ public class SublevelSimpleLayout extends SimpleLayoutGameActivity
 	protected void onSetContentView() 
 	{
 		super.onSetContentView();
-		/*
-		aListView = (ListView) findViewById(R.id.listView1);
-		items = new String[] { "Item 1", "Item 2", "Item 3" };
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, items);
-		aListView.setAdapter(adapter);
-		*/
-		//loadBtn();
-		/*
-		System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-		
-		aListView = (ListView) findViewById(R.id.listView1);
-		
-		items = new String[] { "Item 1", "Item 2", "Item 3" , "Item 1", "Item 2", "Item 3" };
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, items);
-		aListView.setAdapter(adapter);
-		
-		
-		HorizontalScrollView scrolView = (HorizontalScrollView) findViewById(R.id.horizontalScrollView1);
-		scrolView.setHorizontalScrollBarEnabled(false);
-		
-		//ImageButton b = (ImageButton) findViewById(R.id.imageButton1);
-		ImageView b = (ImageView)findViewById(R.id.imageView1);
-		
-		b.setOnClickListener(new OnClickListener() 
-		{
-			
-			@Override
-			public void onClick(View arg0) 
-			{
-				System.out.println("ImageBtn Pressed");
-			}
-		});
-		
-		*/
-		
-		
+	
 		 //set grid view item
 		  Bitmap homeIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.menu3);
 		  Bitmap userIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.menu3);

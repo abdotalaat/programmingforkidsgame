@@ -10,10 +10,12 @@ import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.WakeLockOptions;
+import org.andengine.engine.options.resolutionpolicy.FillResolutionPolicy;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.ui.activity.BaseGameActivity;
 
+import android.view.Display;
 import android.view.KeyEvent;
 
 import com.example.manager.ResourcesManager;
@@ -24,7 +26,7 @@ public class MainActivity extends BaseGameActivity
 
 	private BoundCamera camera;
 	private ResourcesManager resourcesManager;
-
+	 
 	@Override
 	public Engine onCreateEngine(EngineOptions pEngineOptions) 
 	{
@@ -35,8 +37,9 @@ public class MainActivity extends BaseGameActivity
 	public EngineOptions onCreateEngineOptions() 
 	{
 		System.out.println("create Engine Option ***************************************************************");
-		camera = new BoundCamera(0, 0, 800, 530);
-		EngineOptions engineOptions = new EngineOptions(true,ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(800, 530), this.camera);
+		
+		camera = new BoundCamera(0, 0, 842,458);
+		EngineOptions engineOptions = new EngineOptions(true,ScreenOrientation.LANDSCAPE_FIXED, new FillResolutionPolicy(), this.camera);
 		// set needs music and sound to true, so we will be able to use some
 		// audio for our game
 		engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);

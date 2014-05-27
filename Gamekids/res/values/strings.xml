@@ -10,5 +10,6 @@
     <string name="app_id">1398863640395012</string>
     <string name="title_facebook_login">login</string>
     <string name="title_activity_sublevel_simple_layout">SublevelSimpleLayout</string>
+    <string name="reg_layout">Registration</string>
 
 </resources>

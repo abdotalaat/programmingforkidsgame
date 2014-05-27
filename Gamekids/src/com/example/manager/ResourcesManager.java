@@ -7,6 +7,7 @@ import org.andengine.audio.music.MusicFactory;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.Camera;
+import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
@@ -44,12 +45,13 @@ public class ResourcesManager
 	public ITextureRegion splash_region;
 	public ITextureRegion menu_background_region;
 	public ITextureRegion menu_background_facebook;
-	public ITextureRegion background_login;
+	public ITextureRegion background_register;
 	public ITextureRegion play_region;
 	public ITextureRegion options_region;
 	public ITextureRegion quit_region;
 	public ITextureRegion submenu_background_region;
 	public ITextureRegion submenu_item1_region;
+	public ITextureRegion reg_bg;
 	
 	
 	// Game Texture Regions
@@ -65,6 +67,8 @@ public class ResourcesManager
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
 	private BuildableBitmapTextureAtlas faceTextureAtlas;
 	private BuildableBitmapTextureAtlas subMenuAtlas;
+	private BuildableBitmapTextureAtlas registrationAtlas;
+	private BuildableBitmapTextureAtlas registerTextureAtlas;
 	// Game Texture
 	public BuildableBitmapTextureAtlas gameTextureAtlas;
 
@@ -90,10 +94,16 @@ public class ResourcesManager
 	public ITextureRegion facePressedTextureRegion;
 	public ITextureRegion faceDisabledTextureRegion;
 	
+	public ITextureRegion registerNormalTextureRegion ;
+	
 	
 	public Font font;
 
-	
+	public void loadRegistrationResources()
+	{
+		loadRegistrationGraphics();
+		loadMenuFonts();
+	}
 
 	public void loadMenuResources() //ss
 	{
@@ -119,6 +129,7 @@ public class ResourcesManager
 	public void loadFacebookRegisterSceneResources()
 	{
 		loadFacebookGraphics();
+		
 	}
 
 	private void loadMenuAudio() 
@@ -126,11 +137,7 @@ public class ResourcesManager
 
 	}
 
-	private void loadGameRegisterGraphics()
-	{
-		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
-	
-	}
+
 	
 	private void loadFacebookGraphics()
 	{
@@ -138,7 +145,7 @@ public class ResourcesManager
 		faceTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
         
 		menu_background_facebook = BitmapTextureAtlasTextureRegionFactory.createFromAsset(faceTextureAtlas, activity, "menu_bg.gif");
-        
+		this.registerNormalTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(faceTextureAtlas , activity, "button_normal.png");
         this.faceNormalTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(faceTextureAtlas , activity, "faceOnbtn.png");
 		this.facePressedTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(faceTextureAtlas, activity, "faceoffbtn.png");
 		this.faceDisabledTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(faceTextureAtlas, activity , "faceoffbtn.png");
@@ -189,7 +196,10 @@ public class ResourcesManager
 
 	private void loadGameFonts() 
 	{
-
+		FontFactory.setAssetBasePath("font/");
+		final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
+		font.load();
 	}
 	
 
@@ -279,8 +289,8 @@ public class ResourcesManager
 	{
 		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
-        menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
-        menu_background_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_bg.gif");
+        menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024,1024, TextureOptions.BILINEAR);
+        menu_background_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "bg.jpg");
         play_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.jpg");
         options_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.jpg");
         quit_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity,"quitbtn.jpg");
@@ -320,6 +330,24 @@ public class ResourcesManager
 	{
 		
 	}
+	private void loadRegistrationGraphics()
+	{
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/subMenu/");
+		registerTextureAtlas= new BuildableBitmapTextureAtlas(activity.getTextureManager(),2048,2048,TextureOptions.BILINEAR);
+		reg_bg = BitmapTextureAtlasTextureRegionFactory.createFromAsset(subMenuAtlas, activity,"menu_bg.gif");
+		//submenu_item1_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(subMenuAtlas, activity, "level.jpg");
+		
+		try 
+    	{
+			this.registerTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+			this.registerTextureAtlas.load();
+		} 
+    	catch (final TextureAtlasBuilderException e)
+    	{
+			Debug.e(e);
+		}
+
+	}
 	
 	private void loadSubMenuFonts()
 	{
@@ -337,6 +365,17 @@ public class ResourcesManager
 		getInstance().camera = camera;
 		getInstance().vbom = vbom;
 		
+	}
+	public void clearPhysics()
+	{
+		engine.runOnUpdateThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 	public void unloadGameTextures()
